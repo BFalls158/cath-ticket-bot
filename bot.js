@@ -37,9 +37,9 @@ db.once('open', () => {
   // Listen for messages
   client.on('message', (msg) => {
 
-    // Listen for commands starting with '`'
+    // Listen for commands starting with '$'
     let input = msg.content
-    if (input.substring(0, 1) == '`') {
+    if (input.substring(0, 1) == '$') {
       var args = input.substring(1).split(' ')
       const cmd = args[0]
       args = args.splice(1)
@@ -82,7 +82,7 @@ db.once('open', () => {
           }, function (err, res) {
             if (err) return console.log(err)
             // Total the number of occurances
-            let totals = res.reduce((acc, curr) => {
+            let unsortedTotals = res.reduce((acc, curr) => {
               if (typeof acc[curr.username] == 'undefined') {
                 acc[curr.username] = 1
               } else {
@@ -90,12 +90,21 @@ db.once('open', () => {
               }
               return acc
             }, {})
+            const props = Object.keys(unsortedTotals)
+            const values = Object.values(unsortedTotals)
+            let totals = []
+            for (let i = 0; i < props.length; i++) {
+              totals.push({username: [props[i]], occurances: values[i]})
+            }
+            totals.sort((a, b) => {
+              return b.occurances - a.occurances
+            })
             // build message
             let embed = {}
             embed.title = 'Member - Times Under 600'
             embed.description = '`--------------------------------------------------`\n'
-            Object.keys(totals).forEach(user => {
-              embed.description += `\`${user} - ${totals[user]}\`\n`
+            totals.forEach(user => {
+              embed.description += `\`${user.username} - ${user.occurances}\`\n`
             })
             msg.channel.send({embed})
           })
