@@ -68,28 +68,6 @@ db.once('open', () => {
                   logger.error(err)
                 })
 
-<<<<<<< HEAD
-=======
-    // Listen for commands starting with '$'
-    let input = msg.content
-    if (input.substring(0, 1) == '$') {
-      var args = input.substring(1).split(' ')
-      const cmd = args[0]
-      args = args.splice(1)
-      // Handle command
-      switch(cmd) {
-        case 'add':
-          // Add user that missed ticket based on mentions
-          let mentions = msg.mentions.members
-          mentions.forEach(async member => {
-            const entry = new MissingTickets({
-              _id: mongoose.Types.ObjectId(),
-              username: member.user.username,
-              userID: member.id,
-              rUserName: msg.author.username,
-              rUserID: msg.author.id,
-              guild: msg.guild.id
->>>>>>> 61d728632d026dc6a56e5672b3f446d6b63eaed8
             })
           break
 
@@ -136,7 +114,6 @@ db.once('open', () => {
             msg.channel.send('This feature isn\'t avaialble yet. Check back soon.')
           break
 
-<<<<<<< HEAD
           case 'help':
             let embed = {}
             embed.title = 'Available Commands:'
@@ -144,43 +121,6 @@ db.once('open', () => {
             embed.description += '`add <@username> - Adds user(s) to deliquent list`\n'
             embed.description += '`remove <@username>` - Currently does nothing, but it will soon.\n'
             embed.description += '`help - Shows this menu`'
-=======
-        case 'list':
-          // Returns a list of memebers who've missed in the last 30 days
-          MissingTickets.find({
-            "createdAt" : { 
-              $lt: new Date(), 
-              $gte: new Date(new Date().setDate(new Date().getDate()-30))
-            },
-            "guild": msg.guild.id
-          }, function (err, res) {
-            if (err) return console.log(err)
-            // Total the number of occurances
-            let unsortedTotals = res.reduce((acc, curr) => {
-              if (typeof acc[curr.username] == 'undefined') {
-                acc[curr.username] = 1
-              } else {
-                acc[curr.username] += 1
-              }
-              return acc
-            }, {})
-            const props = Object.keys(unsortedTotals)
-            const values = Object.values(unsortedTotals)
-            let totals = []
-            for (let i = 0; i < props.length; i++) {
-              totals.push({username: [props[i]], occurances: values[i]})
-            }
-            totals.sort((a, b) => {
-              return b.occurances - a.occurances
-            })
-            // build message
-            let embed = {}
-            embed.title = 'Member - Times Under 600'
-            embed.description = '`--------------------------------------------------`\n'
-            totals.forEach(user => {
-              embed.description += `\`${user.username} - ${user.occurances}\`\n`
-            })
->>>>>>> 61d728632d026dc6a56e5672b3f446d6b63eaed8
             msg.channel.send({embed})
           break
 
