@@ -36,97 +36,101 @@ db.once('open', () => {
 
   // Listen for messages
   client.on('message', (msg) => {
+    // Check for permissions
+    if (msg.member.roles.find("name", "admin") || msg.member.roles.find("name", "officer")) {
+      // Listen for commands starting with '&'
+      let input = msg.content
+      if (input.substring(0, 1) == '&') {
+        var args = input.substring(1).split(' ')
+        const cmd = args[0]
+        args = args.splice(1)
+        // Handle command
+        switch(cmd) {
+          case 'add':
+            // Add user that missed ticket based on mentions
+            let mentions = msg.mentions.members
+            mentions.forEach(async member => {
+              const entry = new MissingTickets({
+                _id: mongoose.Types.ObjectId(),
+                username: member.user.username,
+                userID: member.id,
+                rUserName: msg.author.username,
+                rUserID: msg.author.id,
+                guild: msg.guild.id
+              })
 
-    // Listen for commands starting with '&'
-    let input = msg.content
-    if (input.substring(0, 1) == '&') {
-      var args = input.substring(1).split(' ')
-      const cmd = args[0]
-      args = args.splice(1)
-      // Handle command
-      switch(cmd) {
-        case 'add':
-          // Add user that missed ticket based on mentions
-          let mentions = msg.mentions.members
-          mentions.forEach(async member => {
-            const entry = new MissingTickets({
-              _id: mongoose.Types.ObjectId(),
-              username: member.user.username,
-              userID: member.id,
-              rUserName: msg.author.username,
-              rUserID: msg.author.id,
-              guild: msg.guild.id
+              await entry.save()
+                .then(result => {
+                  msg.channel.send(`User ${member.user.username} successfully recorded.`)
+                })
+                .catch(err => {
+                  msg.channel.send(`Unable to save ${member.user.username}'s record. Please try again.`)
+                  logger.error(err)
+                })
+
             })
+          break
 
-            await entry.save()
-              .then(result => {
-                msg.channel.send(`User ${member.user.username} successfully recorded.`)
-              })
-              .catch(err => {
-                msg.channel.send(`Unable to save ${member.user.username}'s record. Please try again.`)
-                logger.error(err)
-              })
-
-          })
-        break
-
-        case 'list':
-          // Returns a list of memebers who've missed in the last 30 days
-          MissingTickets.find({
-            "createdAt" : { 
-              $lt: new Date(), 
-              $gte: new Date(new Date().setDate(new Date().getDate()-30))
-            },
-            "guild": msg.guild.id
-          }, function (err, res) {
-            if (err) return console.log(err)
-            // Total the number of occurances
-            let unsortedTotals = res.reduce((acc, curr) => {
-              if (typeof acc[curr.username] == 'undefined') {
-                acc[curr.username] = 1
-              } else {
-                acc[curr.username] += 1
+          case 'list':
+            // Returns a list of memebers who've missed in the last 30 days
+            MissingTickets.find({
+              "createdAt" : { 
+                $lt: new Date(), 
+                $gte: new Date(new Date().setDate(new Date().getDate()-30))
+              },
+              "guild": msg.guild.id
+            }, function (err, res) {
+              if (err) return console.log(err)
+              // Total the number of occurances
+              let unsortedTotals = res.reduce((acc, curr) => {
+                if (typeof acc[curr.username] == 'undefined') {
+                  acc[curr.username] = 1
+                } else {
+                  acc[curr.username] += 1
+                }
+                return acc
+              }, {})
+              const props = Object.keys(unsortedTotals)
+              const values = Object.values(unsortedTotals)
+              let totals = []
+              for (let i = 0; i < props.length; i++) {
+                totals.push({username: [props[i]], occurances: values[i]})
               }
-              return acc
-            }, {})
-            const props = Object.keys(unsortedTotals)
-            const values = Object.values(unsortedTotals)
-            let totals = []
-            for (let i = 0; i < props.length; i++) {
-              totals.push({username: [props[i]], occurances: values[i]})
-            }
-            totals.sort((a, b) => {
-              return b.occurances - a.occurances
+              totals.sort((a, b) => {
+                return b.occurances - a.occurances
+              })
+              // build message
+              let embed = {}
+              embed.title = 'Member - Times Under 600'
+              embed.description = '`--------------------------------------------------`\n'
+              totals.forEach(user => {
+                embed.description += `\`${user.username} - ${user.occurances}\`\n`
+              })
+              msg.channel.send({embed})
             })
-            // build message
+          break
+
+          case 'remove':
+            msg.channel.send('This feature isn\'t avaialble yet. Check back soon.')
+          break
+
+          case 'help':
             let embed = {}
-            embed.title = 'Member - Times Under 600'
-            embed.description = '`--------------------------------------------------`\n'
-            totals.forEach(user => {
-              embed.description += `\`${user.username} - ${user.occurances}\`\n`
-            })
+            embed.title = 'Available Commands:'
+            embed.description = '`list - Lists deliquent users from last 30 days`\n'
+            embed.description += '`add <@username> - Adds user(s) to deliquent list`\n'
+            embed.description += '`remove <@username>` - Currently does nothing, but it will soon.\n'
+            embed.description += '`help - Shows this menu`'
             msg.channel.send({embed})
-          })
-        break
+          break
 
-        case 'remove':
-          msg.channel.send('This feature isn\'t avaialble yet. Check back soon.')
-        break
-
-        case 'help':
-          let embed = {}
-          embed.title = 'Available Commands:'
-          embed.description = '`list - Lists deliquent users from last 30 days`\n'
-          embed.description += '`add <@username> - Adds user(s) to deliquent list`\n'
-          embed.description += '`remove <@username>` - Currently does nothing, but it will soon.\n'
-          embed.description += '`help - Shows this menu`'
-          msg.channel.send({embed})
-        break
-
-        default:
-          msg.channel.send('Sorry, that is not a valid command.')
-        break
+          default:
+            msg.channel.send('Sorry, that is not a valid command.')
+          break
+        }
       }
+    } else {
+      msg.channel.send('Sorry, you don\'t have permission to do that')
     }
   })
 })
