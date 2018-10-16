@@ -37,9 +37,9 @@ db.once('open', () => {
   // Listen for messages
   client.on('message', (msg) => {
 
-    // Listen for commands starting with '$'
+    // Listen for commands starting with '&'
     let input = msg.content
-    if (input.substring(0, 1) == '$') {
+    if (input.substring(0, 1) == '&') {
       var args = input.substring(1).split(' ')
       const cmd = args[0]
       args = args.splice(1)
@@ -61,11 +61,10 @@ db.once('open', () => {
             await entry.save()
               .then(result => {
                 msg.channel.send(`User ${member.user.username} successfully recorded.`)
-                console.log(result)
               })
               .catch(err => {
                 msg.channel.send(`Unable to save ${member.user.username}'s record. Please try again.`)
-                console.log(err)
+                logger.error(err)
               })
 
           })
