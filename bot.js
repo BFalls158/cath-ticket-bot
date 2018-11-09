@@ -186,7 +186,7 @@ db.once('open', () => {
         let embed = new Discord.RichEmbed()
           .setTitle('Help - All commands start with "&"')
           .addField('Command', 'list\n add\n lu or listuser <@username>\n remove <occurance ID>\n ru <username> (do NOT use an @!)\n help', true)
-          .addField('Description', 'Lists deliquent users from last 30 days\nList occurances for member\nAdds user(s) to deliquent list\nRemoves a single occurance by ID\nRemoves a user and all occurances\nShows this menu\n', true)
+          .addField('Description', 'Lists deliquent users from last 30 days\nAdds user(s) to deliquent list\nList occurances for member\nRemoves a single occurance by ID\nRemoves a user and all occurances\nShows this menu\n', true)
         msg.channel.send({embed})
       } else {
         msg.channel.send('Sorry, that is not a valid command.')
