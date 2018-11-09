@@ -3,7 +3,6 @@ const logger = require('winston')
 const mongoose = require('mongoose')
 const moment = require('moment')
 const MissingTickets = require('./Models/MissingTickets.js')
-const formatString = require('./utils/utils')
 
 
 // Configure logger settings
