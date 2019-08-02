@@ -105,7 +105,7 @@ db.once('open', () => {
           })
           // build message
           if (totals.length === 0) {
-            msg.channel.send('No occurrence found')
+            msg.channel.send('No occurrences found')
           } else {
             let embed = {}
             embed.title = 'Member - Times Under 600'
@@ -172,7 +172,7 @@ db.once('open', () => {
                   ids += `${result._id}\n`
                 })
                 let embed = new Discord.RichEmbed()
-                .setTitle(`occurrence for ${res[0].username}`)
+                .setTitle(`Occurrences for ${res[0].username}`)
                 .addField('Date', dates, true)
                 .addField('ID', ids, true)
                 msg.channel.send({embed})
