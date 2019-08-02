@@ -37,7 +37,7 @@ db.once('open', () => {
   // Listen for messages
   client.on('message', (msg) => {
     // Set guild config
-    const occuranceDuration = 30
+    const occurrenceDuration = 30
     // Listen for commands starting with '&'
     let input = msg.content
     if (input.substring(0, 1) == '&') {
@@ -80,12 +80,12 @@ db.once('open', () => {
         MissingTickets.find({
           "createdAt" : { 
             $lt: new Date(), 
-            $gte: new Date(new Date().setDate(new Date().getDate()-occuranceDuration))
+            $gte: new Date(new Date().setDate(new Date().getDate()-occurrenceDuration))
           },
           "guild": msg.guild.id
         }, function (err, res) {
           if (err) return console.log(err)
-          // Total the number of occurances
+          // Total the number of occurrence
           let unsortedTotals = res.reduce((acc, curr) => {
             if (typeof acc[curr.username] == 'undefined') {
               acc[curr.username] = 1
@@ -98,20 +98,20 @@ db.once('open', () => {
           const values = Object.values(unsortedTotals)
           let totals = []
           for (let i = 0; i < props.length; i++) {
-            totals.push({username: [props[i]], occurances: values[i]})
+            totals.push({username: [props[i]], occurrence: values[i]})
           }
           totals.sort((a, b) => {
-            return b.occurances - a.occurances
+            return b.occurrence - a.occurrence
           })
           // build message
           if (totals.length === 0) {
-            msg.channel.send('No occurances found')
+            msg.channel.send('No occurrence found')
           } else {
             let embed = {}
             embed.title = 'Member - Times Under 600'
             embed.description = '`--------------------------------------------------`\n'
             totals.forEach(user => {
-              embed.description += `\`${user.username} - ${user.occurances}\`\n`
+              embed.description += `\`${user.username} - ${user.occurrence}\`\n`
             })
             msg.channel.send({embed})
           }
@@ -125,9 +125,9 @@ db.once('open', () => {
         }
         MissingTickets.findByIdAndRemove(args[0], (err) => {
           if (!err) {
-            msg.channel.send(`Occurance for ID ${args[0]} removed.`)
+            msg.channel.send(`Occurrences for ID ${args[0]} removed.`)
           } else {
-            msg.channel.send(`Cannot find occurance with ID ${args[0]}`)
+            msg.channel.send(`Cannot find occurrence with ID ${args[0]}`)
           }
         })
       } else if (cmd === 'ru' || cmd === 'removeuser') {
@@ -147,7 +147,7 @@ db.once('open', () => {
             }
           })
         })
-        msg.channel.send('User(s) and all occurances successfully removed.')
+        msg.channel.send('User(s) and all occurrences successfully removed.')
       } else if (cmd === 'listuser' || cmd === 'lu') {
         let mentions = msg.mentions.members
         mentions.forEach(member => {
@@ -155,7 +155,7 @@ db.once('open', () => {
             {
               "createdAt" : { 
                 $lt: new Date(), 
-                $gte: new Date(new Date().setDate(new Date().getDate()-occuranceDuration))
+                $gte: new Date(new Date().setDate(new Date().getDate()-occurrenceDuration))
               },
               "guild": msg.guild.id,
               "userID": member.id
@@ -172,7 +172,7 @@ db.once('open', () => {
                   ids += `${result._id}\n`
                 })
                 let embed = new Discord.RichEmbed()
-                .setTitle(`Occurances for ${res[0].username}`)
+                .setTitle(`occurrence for ${res[0].username}`)
                 .addField('Date', dates, true)
                 .addField('ID', ids, true)
                 msg.channel.send({embed})
@@ -185,8 +185,8 @@ db.once('open', () => {
         // on 'help' command
         let embed = new Discord.RichEmbed()
           .setTitle('Help - All commands start with "&"')
-          .addField('Command', 'list\n add <@username>\n lu or listuser <@username>\n remove <occurance ID>\n ru <username> (do NOT use an @!)\n help', true)
-          .addField('Description', 'Lists deliquent users from last 30 days\nAdds user(s) to deliquent list\nList occurances for member\nRemoves a single occurance by ID\nRemoves a user and all occurances\nShows this menu\n', true)
+          .addField('Command', 'list\n add <@username>\n lu or listuser <@username>\n remove <occurrence ID>\n ru <username> (do NOT use an @!)\n help', true)
+          .addField('Description', 'Lists deliquent users from last 30 days\nAdds user(s) to deliquent list\nList occurrences for member\nRemoves a single occurrence by ID\nRemoves a user and all occurrences\nShows this menu\n', true)
         msg.channel.send({embed})
       } else {
         msg.channel.send('Sorry, that is not a valid command.')
