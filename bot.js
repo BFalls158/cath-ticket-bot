@@ -202,7 +202,7 @@ db.once('open', async () => {
           .addField('Description', 'Lists deliquent users from last 30 days\nAdds user(s) to deliquent list\nList occurrences for member\nRemoves a single occurrence by ID\nRemoves a user and all occurrences\nShows this menu\n', true)
 
         let embed2 = new Discord.RichEmbed()
-          .setTitel('Features coming soon:')
+          .setTitle('Features coming soon:')
           .addField('Saved profiles for guild members.\n Character/Mod/Ship lookup.\n Matchup info (ala DSR Bot)')
         msg.channel.send({embed})
         msg.channel.send({embed2})
