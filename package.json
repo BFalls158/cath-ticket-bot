@@ -4,6 +4,7 @@
   "description": "Ticket bot for SWGOH",
   "main": "bot.js",
   "dependencies": {
+    "api-swgoh-help": "^3.3.0",
     "discord.js": "^11.4.2",
     "moment": "^2.22.2",
     "mongoose": "^5.3.2",

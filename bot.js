@@ -3,7 +3,7 @@ const logger = require('winston')
 const mongoose = require('mongoose')
 const moment = require('moment')
 const MissingTickets = require('./Models/MissingTickets.js')
-
+// const ApiSwgohHelp = require('api-swgoh-help')
 
 // Configure logger settings
 logger.remove(logger.transports.Console)
@@ -23,7 +23,20 @@ mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@
 })
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', () => {
+db.once('open', async () => {
+  // Connect to SWGOH.HELP API
+  // const swapi = new ApiSwgohHelp({
+  //   "username": process.env.SWGOH_HELP_USER,
+  //   "password": process.env.SWGOH_HELP_PASS,
+  //   debug: true
+  // })
+
+  // try {
+  //   let { result, error, warning } = await swapi.fetchPlayer({"allycode":282392964})
+  //   console.log(result, error, warning)
+  // } catch (error) {
+  //   console.log(error)
+  // }
 
   // Initialize Discord Bot
   const client = new Discord.Client()
@@ -187,7 +200,12 @@ db.once('open', () => {
           .setTitle('Help - All commands start with "&"')
           .addField('Command', 'list\n add <@username>\n lu or listuser <@username>\n remove <occurrence ID>\n ru <username> (do NOT use an @!)\n help', true)
           .addField('Description', 'Lists deliquent users from last 30 days\nAdds user(s) to deliquent list\nList occurrences for member\nRemoves a single occurrence by ID\nRemoves a user and all occurrences\nShows this menu\n', true)
+
+        let embed2 = new Discord.RichEmbed()
+          .setTitel('Features coming soon:')
+          .addField('Saved profiles for guild members.\n Character/Mod/Ship lookup.\n Matchup info (ala DSR Bot)')
         msg.channel.send({embed})
+        msg.channel.send({embed2})
       } else {
         msg.channel.send('Sorry, that is not a valid command.')
       }
