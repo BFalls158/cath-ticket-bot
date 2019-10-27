@@ -203,7 +203,7 @@ db.once('open', async () => {
 
         let embed2 = new Discord.RichEmbed()
           .setTitle('Features coming soon:')
-          .addField('Saved profiles for guild members.\n Character/Mod/Ship lookup.\n Matchup info (ala DSR Bot)')
+          .addField('Features', 'Saved profiles for guild members.\n Character/Mod/Ship lookup.\n Matchup info (ala DSR Bot)')
         msg.channel.send({embed})
         msg.channel.send({embed2})
       } else {
