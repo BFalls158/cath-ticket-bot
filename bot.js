@@ -200,12 +200,8 @@ db.once('open', async () => {
           .setTitle('Help - All commands start with "&"')
           .addField('Command', 'list\n add <@username>\n lu or listuser <@username>\n remove <occurrence ID>\n ru <username> (do NOT use an @!)\n help', true)
           .addField('Description', 'Lists deliquent users from last 30 days\nAdds user(s) to deliquent list\nList occurrences for member\nRemoves a single occurrence by ID\nRemoves a user and all occurrences\nShows this menu\n', true)
-
-        let embed2 = new Discord.RichEmbed()
-          .setTitle('Features coming soon:')
-          .addField('Features', 'Saved profiles for guild members.\n Character/Mod/Ship lookup.\n Matchup info (ala DSR Bot)')
+          .addField('Upcoming Features', 'Saved profiles for guild members.\n Character/Mod/Ship lookup.\n Matchup info (ala DSR Bot)', false)
         msg.channel.send({embed})
-        msg.channel.send({embed2})
       } else {
         msg.channel.send('Sorry, that is not a valid command.')
       }
