@@ -12,7 +12,7 @@ logger.add(new logger.transports.Console, {
 })
 logger.level = 'debug'
 // Connect to mongooes instance
-mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@ds227373.mlab.com:27373/ticket-bot`, {
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.exnfp.mongodb.net/ticket-bot?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
@@ -60,7 +60,7 @@ db.once('open', async () => {
       let hasPermission = msg.member.hasPermission('MANAGE_MESSAGES')
       // Handle command
       if (cmd === 'add') {
-        // on 'add' command
+        // on 'add' command 
         // verify that user has required permission
         if (!hasPermission) {
           msg.channel.send(`You do not have permission to do that.`)
