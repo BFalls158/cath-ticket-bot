@@ -184,7 +184,7 @@ db.once('open', async () => {
                   dates += `${moment(result.createdAt).format('MM/DD/YYYY')}\n`
                   ids += `${result._id}\n`
                 })
-                let embed = new Discord.RichEmbed()
+                let embed = new Discord.MessageEmbed()
                 .setTitle(`Occurrences for ${res[0].username}`)
                 .addField('Date', dates, true)
                 .addField('ID', ids, true)
@@ -196,7 +196,7 @@ db.once('open', async () => {
         })
       } else if (cmd === 'help') {
         // on 'help' command
-        let embed = new Discord.RichEmbed()
+        let embed = new Discord.MessageEmbed()
           .setTitle('Help - All commands start with "&"')
           .addField('Command', 'list\n add <@username>\n lu or listuser <@username>\n remove <occurrence ID>\n ru <username> (do NOT use an @!)\n help', true)
           .addField('Description', 'Lists deliquent users from last 30 days\nAdds user(s) to deliquent list\nList occurrences for member\nRemoves a single occurrence by ID\nRemoves a user and all occurrences\nShows this menu\n', true)
