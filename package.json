@@ -10,11 +10,22 @@
     "mongoose": "^5.10.9",
     "winston": "^3.3.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
+  },
   "scripts": {
+    "lint": "eslint --ext .js .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bot.js"
   },
   "author": "bfalls",
-  "license": "ISC"
+  "license": "ISC",
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "node": true
+    }
+  }
 }

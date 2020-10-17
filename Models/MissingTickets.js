@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const MissingTicketsSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -6,9 +6,9 @@ const MissingTicketsSchema = mongoose.Schema({
   userID: String,
   rUserName: String,
   rUserID: String,
-  guild: String
+  guild: String,
 }, {
-  timestamps: true
-})
+  timestamps: true,
+});
 
-module.exports = mongoose.model("MissingTickets", MissingTicketsSchema)
+module.exports = mongoose.model('MissingTickets', MissingTicketsSchema);
